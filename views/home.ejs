@@ -3,8 +3,8 @@
 <h1>Home</h1>
 <p><%= startingContent %></p>
 
-<% console.log(posts.estimatedDocumentCount()); %>
-<% if(posts.estimatedDocumentCount() === 0) { %>
+
+<% if(posts.length) { %>
 <% console.log("Inside the if"); %>
 <% posts.forEach( function(post) { %>
 

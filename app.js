@@ -21,7 +21,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 
-const posts = [];
 
 const postSchema = new mongoose.Schema({
   title: String,
@@ -31,16 +30,18 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model("Post", postSchema);
 
 app.get("/", function (req, res) {
-  //console.log(posts);
 
-  //if (!post) {
-  res.render("home", {
-    startingContent: homeStartingContent,
-    posts: Post
+  Post.find({}, function (err, posts) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(posts);
+      res.render("home", {
+        startingContent: homeStartingContent,
+        posts: posts
+      });
+    }
   });
-  //  } else {
-  console.log("Content item");
-  //  }
 
 
 });
@@ -69,7 +70,6 @@ app.post("/compose", function (req, res) {
   });
 
   post.save();
-  posts.push(post);
 
   res.redirect("/");
 });
@@ -90,9 +90,12 @@ app.get("/posts/:postName", function (req, res) {
       });
     }
   });
-
 });
 
-app.listen(3000, function () {
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port, function () {
   console.log("Server started on port 3000");
 });
